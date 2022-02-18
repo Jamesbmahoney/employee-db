@@ -1,8 +1,6 @@
 const db = require('./config/connection');
 const express = require('express');
 const inquirer = require('inquirer');
-const { init } = require('express/lib/application');
-const { type } = require('express/lib/response');
 
 const PORT = process.env.port || 3001;
 const app = express();
@@ -16,6 +14,7 @@ db.connect(err => {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
+    initQuestions();
 });
 
 function initQuestions() {
@@ -34,7 +33,7 @@ function initQuestions() {
         name: "branch"
     }).then(answers => {
         console.log(answers.branch);
-        switch (answers, branch) {
+        switch (answers.branch) {
             case "View All Employees":
                 getEmployees()
                 break;
@@ -52,7 +51,7 @@ function initQuestions() {
                 break;
             case "Update Current Employee Role":
                 updateRole()
-                break;
+                break;               
         }
     })
 }

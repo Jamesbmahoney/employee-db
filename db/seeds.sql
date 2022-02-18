@@ -14,7 +14,7 @@ VALUES
     ('Entry Level', '650000.00', '2'),
     ('Intern', '50000.00', '3');
 
-    INSERT INTO employee (first_name, last_name, role_id)
+    INSERT INTO employee (first_name, last_name, role_id, manager_id)
     VALUE 
       ('John', 'Smith', '1234', '1'),
       ('Ralphie', 'Perez', '14343', '2'),
