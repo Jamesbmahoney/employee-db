@@ -62,5 +62,5 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## Demo
 
-![db-gif](https://github.com/Jamesbmahoney/employee-db/blob/main/images/scratch-that-gif.gif)
+![db-gif](https://github.com/Jamesbmahoney/employee-db/blob/main/images/employee_db.gif)
 
