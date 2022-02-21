@@ -13,61 +13,83 @@ db.connect(err => {
     console.log('Database connected!');
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
-    });
-    initQuestions();
+        initQuestions();        
+    });    
 });
+
+
 
 function initQuestions() {
     inquirer.prompt({
-        message: "Welcome! Please Select An Option:",
-        type: "list",
+        message: 'Welcome! Please Select An Option:',
+        type: 'list',
         choices: [
-            "View All Employees",
-            "View All Departments",
-            "Add New Employee",
-            "Add New Department",
-            "Add New Role",
-            "Update Current Employee Role",
-            "Quit"
+            'View All Employees',
+            'View All Departments',
+            'View All Roles',
+            'Add New Employee',
+            'Add New Department',
+            'Add New Role',
+            'Update Current Employee Role',
+            'Quit'
         ],
-        name: "branch"
+        name: 'branch'
     }).then(answers => {
         console.log(answers.branch);
         switch (answers.branch) {
-            case "View All Employees":
+            case 'View All Employees':
                 getEmployees()
                 break;
-            case "View All Departments":
+            case 'View All Departments':
                 getDepartments()
                 break;
-            case "Add New Employee":
+            case 'View All Roles':
+                getRoles()
+                break;    
+            case 'Add New Employee':
                 addNewEmployee()
                 break;
-            case "Add New Department":
+            case 'Add New Department':
                 addNewDepartment()
                 break;
-            case "Add New Role":
+            case 'Add New Role':
                 addNewRole()
                 break;
-            case "Update Current Employee Role":
+            case 'Update Current Employee Role':
                 updateRole()
-                break;               
+                break;
+            case 'Quit':
+                console.log('Thank you for using Employee Tracker!')                  
+                process.exit()                                                                      
         }
     })
 }
 
 function getEmployees() {
-    db.query('SELECT * FROM employee', (err, data) => {
-        console.table(data);        
+    db.query('SELECT employee.emp_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.dept_name FROM employee JOIN roles ON roles.roles_id = employee.emp_role_id JOIN department ON roles.dept_id = department.dept_id', (err, data) => {
+        if (err) throw err;
+        console.table(data);
+        initQuestions();
     })
-    initQuestions();
+    
 }
 
 function getDepartments() {
     db.query('SELECT * FROM department', (err, data) => {
-        console.table(data);        
+        if (err) throw err;
+        console.table(data);
+        initQuestions();
     })
-    initQuestions();
+    
+}
+
+function getRoles() {
+    db.query('SELECT * FROM roles', (err, data) => {
+        if (err) throw err;
+        console.table(data);
+        initQuestions();
+    })
+    
 }
 
 function addNewEmployee() {
@@ -91,12 +113,12 @@ function addNewEmployee() {
         name: 'managerId',
         message: 'What is the employee manager ID'
     }
-    ]).then(function(res) {
-        db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [res.firstName, res.lastName, res.roleId, res.managerId], (err, data) => {
+    ]).then(function (res) {
+        db.query('INSERT INTO employee (first_name, last_name, emp_role_id, manager_id) VALUES (?, ?, ?, ?)', [res.firstName, res.lastName, res.roleId, res.managerId], (err, data) => {
             if (err) throw err;
-            console.table('Successfully Added Employee!');            
-        })
-        initQuestions();
+            console.table(data);
+            initQuestions();
+        })        
     })
 }
 
@@ -106,12 +128,12 @@ function addNewDepartment() {
         name: 'department',
         message: 'Please enter a department to add'
     }
-    ]).then(function(res) {
-        db.query('INSERT INTO department (name) VALUES (?)', [res.department], (err, data) => {
+    ]).then(function (res) {
+        db.query('INSERT INTO department (dept_name) VALUES (?)', [res.department], (err, data) => {
             if (err) throw err;
-            console.table('Successfully Added Department!');            
-        })
-        initQuestions();
+            console.table(data);
+            initQuestions();
+        })       
     })
 }
 
@@ -121,7 +143,7 @@ function addNewRole() {
             type: 'input',
             name: 'title',
             message: 'Please enter a title'
-            
+
         },
         {
             type: 'number',
@@ -133,37 +155,34 @@ function addNewRole() {
             name: 'department_id',
             message: 'Please enter a department ID'
         }
-    ]).then(function(res) {
-        db.query('INSERT INTO roles (title, salary, department_id VALUES (?,?,?)', [res.title, res.salary, res.department_id], (err, data) => {
+    ]).then(function (res) {
+        db.query('INSERT INTO roles (title, salary, dept_id VALUES (?, ?, ?)', [res.title, res.salary, res.department_id], (err, data) => {
             if (err) throw err;
-            console.table('New Role Added To Database!');
+            console.table(data);
+            initQuestions();
         })
-        initQuestions();
     })
 }
 
 function updateRole() {
-    inquirer.createPromptModule([
+    inquirer.prompt([
         {
             type: 'input',
-            name: 'updateFirstName',
-            message: 'Provide updated first name'
-        },
-        // {
-        //     type: 'input',
-        //     name: 'updatelastName',
-        //     message: 'Provide updated last name'
-        // },
+            name: 'LastName',
+            message: 'Which employee would you like to update? (Please provide last name)'
+        },       
         {
             type: 'number',
             name: 'updateRoleId',
-            message: 'Provide updated role ID'
+            message: 'Enter a new Role ID'
         }
-    ]).then(function(res) {
-        db.query('UPDATE employee SET role_id = ? WHERE first_name = ?', [res.updateRoleID, res.updatedFirstName], (err, data) => {
+    ]).then(function (res) {
+        db.query('UPDATE employee SET emp_role_id = ? WHERE last_name = ?', [res.updateRoleId, res.LastName], (err, data) => {
             if (err) throw err;
-            console.table('Employee Updated Successfully!');
+            console.table(data);
+            initQuestions();
         })
-        initQuestions();
     })
 }
+
+
