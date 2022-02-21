@@ -1,5 +1,8 @@
 # employee-db
 
+## Purpose
+A command line database, using mySQL, that allows a user to keep control of employees, their roles, and the companies department along with their title and their salaries.  Also allows one to not only add a new department or employee, but also to assign them roles as well as the ability to update preexisting employees.
+
 ## User Story
 
 AS A business owner
@@ -43,3 +46,21 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role
 
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+
+## Built With
+* JS
+* Node.js
+* Express
+* Inquirer
+* mySQL
+
+## Images
+
+<img src="./images/employee_db_1.jpg" />
+<img src="./images/employee_db_2.jpg" />
+<img src="./images/employee_db_3.jpg" />
+
+## Demo
+
+![db-gif](https://github.com/Jamesbmahoney/employee-db/blob/main/images/scratch-that-gif.gif)
+
